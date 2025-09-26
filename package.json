@@ -1,0 +1,14 @@
+{
+  "name": "ai-image-generator-api",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "wrangler dev api-only.js --config wrangler-api-only.toml",
+    "deploy": "wrangler deploy --config wrangler-api-only.toml",
+    "build": "wrangler deploy --config wrangler-api-only.toml"
+  },
+  "dependencies": {
+    "wrangler": "^4.32.0"
+  }
+}
