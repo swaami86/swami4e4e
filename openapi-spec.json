@@ -1,0 +1,549 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "AI Image Generator API",
+    "version": "1.0.0",
+    "description": "Generate high-quality images from text prompts using advanced AI models. Supports multiple models including Flux, Flux-Realism, and Stable Diffusion with customizable parameters.",
+    "contact": {
+      "name": "API Support",
+      "email": "support@yourdomain.com",
+      "url": "https://yourdomain.com/support"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "x-category": "Machine Learning",
+    "x-long-description": "Professional AI image generation API with multi-account load balancing, rate limiting, and enterprise-grade reliability. Perfect for applications requiring high-quality AI-generated images from text descriptions.",
+    "x-website": "https://yourdomain.com",
+    "x-public": true,
+    "x-version-lifecycle": "active",
+    "x-badges": ["ai", "image-generation", "machine-learning", "art", "creative"],
+    "x-collections": ["ai-tools", "image-apis"]
+  },
+  "servers": [
+    {
+      "url": "https://api.yourdomain.com",
+      "description": "Production server with load balancing"
+    },
+    {
+      "url": "https://api1.yourdomain.com", 
+      "description": "Direct access to Account 1"
+    },
+    {
+      "url": "https://api2.yourdomain.com",
+      "description": "Direct access to Account 2"
+    },
+    {
+      "url": "https://api3.yourdomain.com",
+      "description": "Direct access to Account 3"
+    }
+  ],
+  "security": [
+    {
+      "RapidAPIAuth": []
+    }
+  ],
+  "paths": {
+    "/api/image/generate": {
+      "get": {
+        "summary": "Generate Image from Text Prompt",
+        "description": "Generate high-quality images from text descriptions using advanced AI models. Supports various models, dimensions, and output formats.",
+        "operationId": "generateImage",
+        "tags": ["Image Generation"],
+        "parameters": [
+          {
+            "name": "prompt",
+            "in": "query", 
+            "required": true,
+            "description": "Text description of the image to generate (max 1000 characters)",
+            "schema": {
+              "type": "string",
+              "maxLength": 1000,
+              "example": "A majestic dragon soaring over a medieval castle at sunset"
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "required": false,
+            "description": "AI model to use for generation",
+            "schema": {
+              "type": "string",
+              "enum": ["flux", "flux-realism", "kontext", "stable-diffusion"],
+              "default": "flux",
+              "example": "flux"
+            }
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "required": false,
+            "description": "Image width in pixels",
+            "schema": {
+              "type": "integer",
+              "minimum": 256,
+              "maximum": 2048,
+              "default": 1024,
+              "example": 1024
+            }
+          },
+          {
+            "name": "height", 
+            "in": "query",
+            "required": false,
+            "description": "Image height in pixels",
+            "schema": {
+              "type": "integer",
+              "minimum": 256,
+              "maximum": 2048,
+              "default": 1024,
+              "example": 1024
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Response format for the generated image",
+            "schema": {
+              "type": "string",
+              "enum": ["base64", "url", "both"],
+              "default": "base64",
+              "example": "base64"
+            }
+          },
+          {
+            "name": "seed",
+            "in": "query",
+            "required": false,
+            "description": "Random seed for reproducible results",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999999,
+              "example": 42
+            }
+          },
+          {
+            "name": "enhance",
+            "in": "query",
+            "required": false,
+            "description": "Automatically enhance the prompt for better results",
+            "schema": {
+              "type": "string",
+              "enum": ["true", "false"],
+              "default": "false",
+              "example": "false"
+            }
+          },
+          {
+            "name": "safe",
+            "in": "query",
+            "required": false,
+            "description": "Enable NSFW content filter",
+            "schema": {
+              "type": "string",
+              "enum": ["true", "false"],
+              "default": "true",
+              "example": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image generated successfully",
+            "headers": {
+              "x-ratelimit-requests-limit": {
+                "description": "Number of requests allowed per time period",
+                "schema": {
+                  "type": "string",
+                  "example": "100"
+                }
+              },
+              "x-ratelimit-requests-remaining": {
+                "description": "Number of requests remaining in current time period",
+                "schema": {
+                  "type": "string",
+                  "example": "99"
+                }
+              },
+              "x-response-time": {
+                "description": "Response time in milliseconds",
+                "schema": {
+                  "type": "string",
+                  "example": "2500ms"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageGenerationResponse"
+                },
+                "example": {
+                  "success": true,
+                  "message": "Image generated successfully",
+                  "data": {
+                    "prompt": "A majestic dragon soaring over a medieval castle at sunset",
+                    "model": "flux",
+                    "width": 1024,
+                    "height": 1024,
+                    "format": "base64",
+                    "image_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==",
+                    "generated_at": "2024-08-24T10:30:00.000Z",
+                    "request_id": "123e4567-e89b-12d3-a456-426614174000"
+                  },
+                  "metadata": {
+                    "processing_time_ms": 2500,
+                    "api_version": "1.0.0",
+                    "served_by": "cloudflare-workers"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "MISSING_PROMPT",
+                    "message": "The prompt parameter is required and cannot be empty",
+                    "details": "Please provide a text description for image generation",
+                    "timestamp": "2024-08-24T10:30:00.000Z"
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid RapidAPI key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Missing X-RapidAPI-Key header",
+                    "details": "This API requires a valid RapidAPI key",
+                    "timestamp": "2024-08-24T10:30:00.000Z"
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limit Exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "RATE_LIMIT_EXCEEDED",
+                    "message": "You have exceeded the rate limit of 100 requests per day",
+                    "details": "Please upgrade your plan or wait for the limit to reset",
+                    "timestamp": "2024-08-24T10:30:00.000Z"
+                  },
+                  "data": null,
+                  "retry_after": 3600
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "GENERATION_FAILED",
+                    "message": "Failed to generate image",
+                    "details": "An unexpected error occurred during image generation",
+                    "timestamp": "2024-08-24T10:30:00.000Z"
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/text/generate": {
+      "get": {
+        "summary": "Generate Text from Prompt",
+        "description": "Generate text content using advanced AI language models",
+        "operationId": "generateText",
+        "tags": ["Text Generation"],
+        "parameters": [
+          {
+            "name": "prompt",
+            "in": "query",
+            "required": true,
+            "description": "Text prompt for generation",
+            "schema": {
+              "type": "string",
+              "maxLength": 2000,
+              "example": "Write a short story about a robot discovering emotions"
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "required": false,
+            "description": "Text generation model",
+            "schema": {
+              "type": "string",
+              "enum": ["openai", "mistral", "llama"],
+              "default": "openai",
+              "example": "openai"
+            }
+          },
+          {
+            "name": "max_tokens",
+            "in": "query",
+            "required": false,
+            "description": "Maximum length of generated text",
+            "schema": {
+              "type": "integer",
+              "minimum": 50,
+              "maximum": 4000,
+              "default": 1000,
+              "example": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextGenerationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Check API health and status across all accounts",
+        "operationId": "healthCheck",
+        "tags": ["System"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "RapidAPIAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-RapidAPI-Key",
+        "description": "RapidAPI authentication key. Required for all API endpoints."
+      }
+    },
+    "schemas": {
+      "ImageGenerationResponse": {
+        "type": "object",
+        "required": ["success", "message", "data"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Image generated successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "prompt": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              },
+              "format": {
+                "type": "string"
+              },
+              "image_base64": {
+                "type": "string",
+                "description": "Base64 encoded image data"
+              },
+              "image_url": {
+                "type": "string",
+                "description": "Data URL (only if format is 'url' or 'both')"
+              },
+              "generated_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "request_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "processing_time_ms": {
+                "type": "integer"
+              },
+              "api_version": {
+                "type": "string"
+              },
+              "served_by": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "TextGenerationResponse": {
+        "type": "object",
+        "required": ["success", "message", "data"],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "prompt": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "generated_text": {
+                "type": "string"
+              },
+              "generated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["success", "error", "data"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "MISSING_PROMPT"
+              },
+              "message": {
+                "type": "string",
+                "example": "The prompt parameter is required"
+              },
+              "details": {
+                "type": "string",
+                "example": "Please provide a text description"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "data": {
+            "type": "null"
+          },
+          "retry_after": {
+            "type": "integer",
+            "description": "Seconds to wait before retrying (only for rate limit errors)"
+          }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "healthy"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accounts": {
+            "type": "integer",
+            "example": 3
+          },
+          "version": {
+            "type": "string",
+            "example": "1.0.0"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Image Generation",
+      "description": "AI-powered image generation from text prompts"
+    },
+    {
+      "name": "Text Generation", 
+      "description": "AI-powered text generation and completion"
+    },
+    {
+      "name": "System",
+      "description": "System health and status endpoints"
+    }
+  ]
+}

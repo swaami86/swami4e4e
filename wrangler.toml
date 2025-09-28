@@ -1,0 +1,45 @@
+name = "ai-image-generator-api"
+main = "workers/index.js"
+compatibility_date = "2024-08-24"
+compatibility_flags = ["nodejs_compat"]
+
+# Production environment uses free workers.dev subdomain
+[env.production]
+name = "ai-image-generator-api"
+
+# Account environments - each gets free workers.dev subdomain
+[env.account1]
+name = "ai-image-generator-api-1"
+
+[env.account2]
+name = "ai-image-generator-api-2"
+
+[env.account3]
+name = "ai-image-generator-api-3"
+
+[env.account4]
+name = "ai-image-generator-api-4"
+
+[env.account5]
+name = "ai-image-generator-api-5"
+
+[env.account6]
+name = "ai-image-generator-api-6"
+
+[env.account7]
+name = "ai-image-generator-api-7"
+
+[env.account8]
+name = "ai-image-generator-api-8"
+
+[env.account9]
+name = "ai-image-generator-api-9"
+
+[env.account10]
+name = "ai-image-generator-api-10"
+
+# No custom routes needed - using free workers.dev subdomains
+# Each deployment will automatically get: 
+# https://ai-image-generator-api-1.<subdomain>.workers.dev
+# https://ai-image-generator-api-2.<subdomain>.workers.dev
+# etc.

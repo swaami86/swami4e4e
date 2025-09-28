@@ -1,0 +1,88 @@
+{
+  "load_balancer": {
+    "name": "ai-image-api-lb",
+    "description": "Load balancer for AI Image Generation API across 3 accounts",
+    "enabled": true,
+    "ttl": 30,
+    "fallback_pool": "primary-pool",
+    "default_pools": ["account1-pool", "account2-pool", "account3-pool"],
+    "region_pools": {
+      "WNAM": ["account1-pool"],
+      "ENAM": ["account2-pool"], 
+      "EU": ["account3-pool"],
+      "APAC": ["account1-pool", "account2-pool"]
+    },
+    "pop_pools": {},
+    "proxied": true,
+    "steering_policy": "dynamic_latency",
+    "session_affinity": "none",
+    "adaptive_routing": {
+      "failover_across_pools": true
+    }
+  },
+  "pools": [
+    {
+      "name": "account1-pool",
+      "description": "Account 1 Workers",
+      "enabled": true,
+      "minimum_origins": 1,
+      "monitor": "api-health-monitor",
+      "origins": [
+        {
+          "name": "account1-worker",
+          "address": "ai-image-generator-api-1.your-account1.workers.dev",
+          "enabled": true,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "name": "account2-pool", 
+      "description": "Account 2 Workers",
+      "enabled": true,
+      "minimum_origins": 1,
+      "monitor": "api-health-monitor",
+      "origins": [
+        {
+          "name": "account2-worker",
+          "address": "ai-image-generator-api-2.your-account2.workers.dev",
+          "enabled": true,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "name": "account3-pool",
+      "description": "Account 3 Workers", 
+      "enabled": true,
+      "minimum_origins": 1,
+      "monitor": "api-health-monitor",
+      "origins": [
+        {
+          "name": "account3-worker",
+          "address": "ai-image-generator-api-3.your-account3.workers.dev",
+          "enabled": true,
+          "weight": 1
+        }
+      ]
+    }
+  ],
+  "monitors": [
+    {
+      "type": "https",
+      "method": "GET",
+      "path": "/health",
+      "header": {
+        "Host": ["api.yourdomain.com"],
+        "User-Agent": ["Cloudflare-Traffic-Manager/1.0"]
+      },
+      "timeout": 5,
+      "retries": 2,
+      "interval": 60,
+      "expected_codes": "200",
+      "follow_redirects": true,
+      "allow_insecure": false,
+      "probe_zone": "us-east-1"
+    }
+  ]
+}
